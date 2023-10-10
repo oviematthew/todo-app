@@ -38,6 +38,7 @@ export default function App() {
   );
   setTasks(updatedTasks);
   }
+  
   return (
   <ScrollView>
   <View style={styles.container}>
