@@ -32,7 +32,7 @@ export default function Form(props) {
     Alert.alert(
       'Task Added',
       'Task Added Successfully',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }]
+      [{ text: 'OK' }]
     );
   }
 
