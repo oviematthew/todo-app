@@ -1,105 +1,100 @@
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, View, Text } from 'react-native';
+import { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { load } from './src/database/read';
+import Form from './src/components/Form/Form';
 import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Form from './src/components/Form/Form';
-import styles from './src/styles/main';
 import uuid from 'react-uuid';
-import { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { db } from './src/database/config';
+import { deleteDoc, doc } from 'firebase/firestore';
 
 const Tab = createBottomTabNavigator();
 
-
-
 export default function App() {
-  const [tasks, setTasks] = useState(
-    [
-      {
-        id: uuid(),
-        description: "Walk the dog",
-        done: true
-      },
-      {
-        id: uuid(),
-        description: "Wash the car",
-        done: false
-      },
-      {
-        id: uuid(),
-        description: "Finish the lab",
-        done: true
-      },
-    ]
-  );
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAddTask = (taskDescription, taskDone) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.push(
-      {
-        id: uuid(),
-        description: taskDescription,
-        done: taskDone
-      }
-    );
+  useEffect(() => {
+    // Load tasks when the component mounts
+    load()
+      .then((loadedTasks) => {
+        setTasks(loadedTasks);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error loading tasks:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleAddTask = async (taskId, taskDescription, taskDone) => {
+    const updatedTasks = [...tasks, { id: taskId, description: taskDescription, done: taskDone }];
     setTasks(updatedTasks);
   }
 
+  const handleStatusChange = async (id) => {
+    try {
+      const taskIndex = tasks.findIndex((task) => task.id === id);
+      const updatedTasks = [...tasks];
+      updatedTasks[taskIndex].done = !updatedTasks[taskIndex].done;
 
-  const handleStatusChange = (id) => {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        task.done = !task.done;
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
-  }
-  
-  const handleTaskRemoval = (id) => {
-    const updatedTasks = tasks.filter((task) =>
-      task.id !== id
-    );
-    setTasks(updatedTasks);
+      // Update the task in the database
+      // You'll need to implement the update function in write.js
+
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error('Error changing task status:', error);
+    }
   }
 
-  //List Page
+  const handleTaskRemoval = async (id) => {
+    try {
+      // Remove the task from the database
+      await deleteDoc(doc(db, 'tasks', id));
+
+      // Update the state by filtering out the removed task
+      const updatedTasks = tasks.filter((task) => task.id !== id);
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error('Error removing task:', error);
+    }
+  }
+
+  // List Page
   function List() {
     return (
       <ScrollView>
-        <View style={styles.container}>
+        <View>
           <StatusBar style="auto" />
           <Header />
-
-          <Tasks tasks={tasks}
-            onStatusChange={handleStatusChange}
-            onTaskRemoval={handleTaskRemoval} />
-
+          {loading && <Text>Loading...</Text>}
+          {!loading && tasks.length === 0 && <Text>No tasks in the list</Text>}
+          {!loading && tasks.length > 0 && (
+            <Tasks tasks={tasks} onStatusChange={handleStatusChange} onTaskRemoval={handleTaskRemoval} />
+          )}
         </View>
       </ScrollView>
-    )
+    );
   }
 
-
-  //Add new tasks page
+  // Add new tasks page
   function Add() {
     return (
       <View>
         <StatusBar style="auto" />
         <Form onAddTask={handleAddTask} />
       </View>
-    )
+    );
   }
 
-
-
-  //Rendered screen
+  // Rendered screen
   return (
     <NavigationContainer>
       <Tab.Navigator>
-
         <Tab.Screen
           name="List"
           component={List}
@@ -109,8 +104,6 @@ export default function App() {
             ),
           }}
         />
-
-
         <Tab.Screen
           name="Add"
           component={Add}
@@ -123,7 +116,6 @@ export default function App() {
             ),
           }}
         />
-
       </Tab.Navigator>
     </NavigationContainer>
   );

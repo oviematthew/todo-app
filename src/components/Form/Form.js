@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Switch, Button, Keyboard, Alert } from 'react-native';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../src/database/config';
 import styles from './styles';
 
 export default function Form(props) {
@@ -7,18 +9,32 @@ export default function Form(props) {
   const [taskDone, setTaskDone] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleAddPress = () => {
+  const handleAddPress = async () => {
     if (taskDescription) {
-      props.onAddTask(taskDescription, taskDone);
-      setErrorMessage(null);
-      setTaskDescription('');
-      setTaskDone(false);
-      Keyboard.dismiss();
-      handleAddTaskPress(); // Show the alert
+      try {
+        // Add the task to the database
+        const dbCollection = collection(db, 'tasks');
+        const docRef = await addDoc(dbCollection, {
+          description: taskDescription,
+          done: taskDone,
+        });
+
+        // Use the ID returned by Firebase
+        props.onAddTask(taskDescription, taskDone);
+
+        setErrorMessage(null);
+        setTaskDescription('');
+        setTaskDone(false);
+        Keyboard.dismiss();
+        handleAddTaskPress(); // Show the alert
+      } catch (error) {
+        console.error('Error adding task:', error);
+        setErrorMessage('Error adding task.');
+      }
     } else {
       setErrorMessage('The description is required.');
     }
-  }
+  };
 
   const handleDescriptionChange = (value) => {
     setTaskDescription(value);
