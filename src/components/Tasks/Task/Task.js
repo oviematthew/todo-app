@@ -16,20 +16,20 @@ export default function Task(props) {
     try {
       const updatedStatus = !taskStatus;
       setTaskStatus(updatedStatus);
-
+  
       // Update the task status in the Firestore database
-      const taskRef = doc(db, 'tasks', props.task.id);
-      
-      updateDoc(taskRef, { 
+      const taskRef = doc(dbCollection, props.task.id);
+  
+      await updateDoc(taskRef, { 
         done: updatedStatus 
       });
-
+  
       // Trigger the parent component to update its state
       props.onStatusChange(props.task.id);
     } catch (error) {
       console.error('Error updating task status:', error);
     }
-  }
+  };
 
   const handleRemovePress = () => {
     Alert.alert(
