@@ -48,7 +48,9 @@ export default function App() {
   
       // Update the task in the database
       const taskRef = doc(dbCollection, id);
-      updateDoc(taskRef, { done: updatedTasks[taskIndex].done });
+      updateDoc(taskRef, { 
+        done: updatedTasks[taskIndex].done 
+      });
   
       setTasks(updatedTasks);
     } catch (error) {

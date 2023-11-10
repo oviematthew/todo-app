@@ -10,10 +10,10 @@ export default function Form(props) {
   const [taskDone, setTaskDone] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleAddPress = async () => {
+  const handleAddPress =  () => {
     if (taskDescription) {
       try {
-        const docRef = await addDoc(dbCollection, {
+        const docRef = addDoc(dbCollection, {
           description: taskDescription,
           done: taskDone,
         });

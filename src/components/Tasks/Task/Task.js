@@ -12,7 +12,7 @@ export default function Task(props) {
     setShowModal(!showModal);
   }
 
-  const handleToggleStatus = async () => {
+  const handleToggleStatus =  () => {
     try {
       const updatedStatus = !taskStatus;
       setTaskStatus(updatedStatus);
@@ -20,7 +20,7 @@ export default function Task(props) {
       // Update the task status in the Firestore database
       const taskRef = doc(dbCollection, props.task.id);
   
-      await updateDoc(taskRef, { 
+     updateDoc(taskRef, { 
         done: updatedStatus 
       });
   
