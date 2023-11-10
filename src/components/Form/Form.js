@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Switch, Button, Keyboard, Alert } from 'react-native';
 import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../../../src/database/config';
+import { db, dbCollection } from '../../../src/database/config';
+import { load } from '../../../src/database/config'; 
 import styles from './styles';
 
 export default function Form(props) {
@@ -12,16 +13,15 @@ export default function Form(props) {
   const handleAddPress = async () => {
     if (taskDescription) {
       try {
-        // Add the task to the database
-        const dbCollection = collection(db, 'tasks');
+        
         const docRef = await addDoc(dbCollection, {
           description: taskDescription,
           done: taskDone,
         });
-
+  
         // Use the ID returned by Firebase
-        props.onAddTask(taskDescription, taskDone);
-
+        props.onAddTask(docRef.id, taskDescription, taskDone);
+  
         setErrorMessage(null);
         setTaskDescription('');
         setTaskDone(false);
@@ -35,6 +35,7 @@ export default function Form(props) {
       setErrorMessage('The description is required.');
     }
   };
+  
 
   const handleDescriptionChange = (value) => {
     setTaskDescription(value);

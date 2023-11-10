@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, getDocs, collection } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,4 +13,31 @@ const firebaseConfig = {
   
   // Initialize Firebase
 export const db = initializeApp(firebaseConfig);
+export const firestoreDb = getFirestore(db);
+export const dbCollection = collection(firestoreDb, 'tasks');
+
+
+//read from db
+export function load() {
+  const data = [];
+
+  return new Promise((resolve, reject) => {
+    getDocs(dbCollection)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const task = {
+            ...doc.data(),
+            id: doc.id
+          };
+          data.push(task);
+        });
+        resolve(data);
+      })
+      .catch((error) => {
+        console.log('Error:', error);
+        reject(error);
+      });
+  });
+}
+
   

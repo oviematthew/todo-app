@@ -3,7 +3,7 @@ import { ScrollView, View, Text } from 'react-native';
 import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { load } from './src/database/read';
+import { load } from './src/database/config';
 import Form from './src/components/Form/Form';
 import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
