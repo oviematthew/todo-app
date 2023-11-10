@@ -30,6 +30,7 @@ export default function Task(props) {
       console.error('Error updating task status:', error);
     }
   };
+  
 
   const handleRemovePress = () => {
     Alert.alert(
@@ -50,6 +51,11 @@ export default function Task(props) {
       ]
     );
   }
+
+  // useEffect to update the toggle status when the component mounts
+  useEffect(() => {
+    setTaskStatus(props.task.done);
+  }, [props.task.done]);
 
   return (
     <>

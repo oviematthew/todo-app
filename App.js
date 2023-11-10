@@ -9,8 +9,8 @@ import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
 import { FontAwesome5 } from '@expo/vector-icons';
 import uuid from 'react-uuid';
-import { db } from './src/database/config';
-import { deleteDoc, doc } from 'firebase/firestore';
+import { db, dbCollection } from './src/database/config';
+import { deleteDoc, doc, updateDoc} from 'firebase/firestore';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,32 +31,33 @@ export default function App() {
       });
   }, []);
 
-  const handleAddTask = async (taskId, taskDescription, taskDone) => {
+  const handleAddTask = (taskId, taskDescription, taskDone) => {
     const updatedTasks = [...tasks, { id: taskId, description: taskDescription, done: taskDone }];
     setTasks(updatedTasks);
-  }
+  };
 
-  const handleStatusChange = async (id) => {
+  const handleStatusChange = (id) => {
     try {
       const taskIndex = tasks.findIndex((task) => task.id === id);
       const updatedTasks = [...tasks];
       updatedTasks[taskIndex].done = !updatedTasks[taskIndex].done;
   
       // Update the task in the database
-      const taskRef = doc(db, 'tasks', id);
-      await updateDoc(taskRef, { done: updatedTasks[taskIndex].done });
+      const taskRef = doc(dbCollection, id);
+      updateDoc(taskRef, { done: updatedTasks[taskIndex].done });
   
       setTasks(updatedTasks);
     } catch (error) {
       console.error('Error changing task status:', error);
     }
-  }
+  };
+  
 
-  const handleTaskRemoval = async (id) => {
+  const handleTaskRemoval = (id) => {
     try {
       // Remove the task from the database
-      await deleteDoc(doc(db, 'tasks', id));
-
+      deleteDoc(doc(dbCollection, id));
+  
       // Update the state by filtering out the removed task
       const updatedTasks = tasks.filter((task) => task.id !== id);
       setTasks(updatedTasks);
@@ -64,6 +65,7 @@ export default function App() {
       console.error('Error removing task:', error);
     }
   }
+  
 
   // List Page
   function List() {
@@ -72,7 +74,11 @@ export default function App() {
         <View>
           <StatusBar style="auto" />
           <Header />
-          {!loading && tasks.length === 0 && <Text style={{ textAlign: 'center' }}>No tasks in the list</Text>}
+          
+          {!loading && tasks.length === 0 && 
+          <Text style={{ textAlign: 'center' }}>There are no tasks in the list</Text>
+          }
+
           {!loading && tasks.length > 0 && (
             <Tasks tasks={tasks} onStatusChange={handleStatusChange} onTaskRemoval={handleTaskRemoval} />
           )}

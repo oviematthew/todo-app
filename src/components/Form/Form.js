@@ -13,8 +13,7 @@ export default function Form(props) {
   const handleAddPress = async () => {
     if (taskDescription) {
       try {
-        
-        const docRef = addDoc(dbCollection, {
+        const docRef = await addDoc(dbCollection, {
           description: taskDescription,
           done: taskDone,
         });
@@ -25,8 +24,7 @@ export default function Form(props) {
         setErrorMessage(null);
         setTaskDescription('');
         setTaskDone(false);
-        handleAddTaskPress(); 
-        
+        handleAddTaskPress();
       } catch (error) {
         console.error('Error adding task:', error);
         setErrorMessage('Error adding task.');
@@ -35,6 +33,7 @@ export default function Form(props) {
       setErrorMessage('The description is required.');
     }
   };
+  
   
 
   const handleDescriptionChange = (value) => {
