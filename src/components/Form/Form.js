@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Switch, Button, Keyboard, Alert } from 'react-native';
+import { View, Text, TextInput, Switch, Button, Alert } from 'react-native';
 import { addDoc, collection } from 'firebase/firestore';
-import { db, dbCollection } from '../../../src/database/config';
+import { dbCollection } from '../../../src/database/config';
 import { load } from '../../../src/database/config'; 
 import styles from './styles';
 
@@ -14,7 +14,7 @@ export default function Form(props) {
     if (taskDescription) {
       try {
         
-        const docRef = await addDoc(dbCollection, {
+        const docRef = addDoc(dbCollection, {
           description: taskDescription,
           done: taskDone,
         });
@@ -25,8 +25,8 @@ export default function Form(props) {
         setErrorMessage(null);
         setTaskDescription('');
         setTaskDone(false);
-        Keyboard.dismiss();
-        handleAddTaskPress(); // Show the alert
+        handleAddTaskPress(); 
+        
       } catch (error) {
         console.error('Error adding task:', error);
         setErrorMessage('Error adding task.');

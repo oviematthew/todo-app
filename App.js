@@ -41,10 +41,11 @@ export default function App() {
       const taskIndex = tasks.findIndex((task) => task.id === id);
       const updatedTasks = [...tasks];
       updatedTasks[taskIndex].done = !updatedTasks[taskIndex].done;
-
+  
       // Update the task in the database
-      // You'll need to implement the update function in write.js
-
+      const taskRef = doc(db, 'tasks', id);
+      await updateDoc(taskRef, { done: updatedTasks[taskIndex].done });
+  
       setTasks(updatedTasks);
     } catch (error) {
       console.error('Error changing task status:', error);
@@ -71,8 +72,7 @@ export default function App() {
         <View>
           <StatusBar style="auto" />
           <Header />
-          {loading && <Text>Loading...</Text>}
-          {!loading && tasks.length === 0 && <Text>No tasks in the list</Text>}
+          {!loading && tasks.length === 0 && <Text style={{ textAlign: 'center' }}>No tasks in the list</Text>}
           {!loading && tasks.length > 0 && (
             <Tasks tasks={tasks} onStatusChange={handleStatusChange} onTaskRemoval={handleTaskRemoval} />
           )}
