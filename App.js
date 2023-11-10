@@ -32,7 +32,11 @@ export default function App() {
   }, []);
 
   const handleAddTask = (taskId, taskDescription, taskDone) => {
-    const updatedTasks = [...tasks, { id: taskId, description: taskDescription, done: taskDone }];
+    const updatedTasks = [...tasks, { 
+      id: taskId, 
+      description: taskDescription, 
+      done: taskDone 
+    }];
     setTasks(updatedTasks);
   };
 
@@ -74,7 +78,7 @@ export default function App() {
         <View>
           <StatusBar style="auto" />
           <Header />
-          
+
           {!loading && tasks.length === 0 && 
           <Text style={{ textAlign: 'center' }}>There are no tasks in the list</Text>
           }
