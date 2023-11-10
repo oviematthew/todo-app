@@ -9,7 +9,7 @@ import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
 import { FontAwesome5 } from '@expo/vector-icons';
 import uuid from 'react-uuid';
-import { db, dbCollection } from './src/database/config';
+import { dbCollection } from './src/database/config';
 import { deleteDoc, doc, updateDoc} from 'firebase/firestore';
 
 const Tab = createBottomTabNavigator();
