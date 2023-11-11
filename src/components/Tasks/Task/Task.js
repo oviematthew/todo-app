@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Switch, Pressable, Modal, Alert } from 'react-native';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db, dbCollection } from '../../../database/config';
+import { dbCollection } from '../../../database/config';
 import styles from '../styles';
 
 export default function Task(props) {
