@@ -4,6 +4,15 @@ import styles from "./styles";
 
 export default function LocalNotification(){
     const [reminder, setReminder] = useState(false);
+
+    const handleReminderPress = () => {
+        if(!reminder) {
+            setReminder(true);
+        }
+        else{
+            setReminder(false);
+        }
+    }
     return(
         <View style = {styles.container}>
             <Text style = {styles.title}>Notifications:</Text>
@@ -13,8 +22,11 @@ export default function LocalNotification(){
 
             {/* Switch option */}
             <View style = {styles.options.container}>
-                <Switch/>
-                <Pressable>
+                <Switch
+                value = {reminder}
+                onValueChange = {handleReminderPress}
+                />
+                <Pressable onPress={handleReminderPress}>
                     <Text style = {styles.options.label}>
                         Set Daily Reminder
                     </Text>
