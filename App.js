@@ -5,12 +5,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { load } from './src/database/config';
 import Form from './src/components/Form/Form';
+import LocalNotification from './src/components/LocalNotification';
 import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
 import { FontAwesome5, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import uuid from 'react-uuid';
 import { dbCollection } from './src/database/config';
 import { deleteDoc, doc, updateDoc} from 'firebase/firestore';
+import * as Notifications from 'expo-notifications';
 
 const Tab = createBottomTabNavigator();
 
@@ -108,6 +110,7 @@ export default function App() {
     return (
       <View>
         <StatusBar style="auto" />
+        <LocalNotification/>
       </View>
     );
   }
@@ -131,7 +134,7 @@ export default function App() {
           options={{
             tabBarIcon: ({ color }) => (
               <View>
-                <MaterialIcons name="add-circle" size={24} />
+                <MaterialIcons name="add-circle-outline" size={24} />
               </View>
             ),
           }}
