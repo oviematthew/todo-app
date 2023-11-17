@@ -28,7 +28,7 @@ options: {
     },
     label: {
         marginLeft: 10,
-        fontSie: 17
+        fontSize: 17
     }
 },
 

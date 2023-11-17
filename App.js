@@ -12,10 +12,29 @@ import { FontAwesome5, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import uuid from 'react-uuid';
 import { dbCollection } from './src/database/config';
 import { deleteDoc, doc, updateDoc} from 'firebase/firestore';
+import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications';
 
-const Tab = createBottomTabNavigator();
 
+//keep splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
+//handle notification display
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true
+  }),
+  handleSuccess: (notificationId) => {
+    console.log('Handler success: ', notificationId)
+  },
+  handleError: (notificationId, error) => {
+    console.loh('Handler Error:', error)
+  }
+})
+
+const Tab = createBottomTabNavigator();
 export default function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,15 +1,18 @@
 import { View, Text, Switch, Platform, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import styles from "./styles";
+import * as Notifications from 'expo-notifications';
 
 export default function LocalNotification(){
     const [reminder, setReminder] = useState(false);
 
     const handleReminderPress = () => {
         if(!reminder) {
+            scheduleReminder()
             setReminder(true);
         }
         else{
+            cancelReminder()
             setReminder(false);
         }
     }
@@ -45,4 +48,45 @@ export default function LocalNotification(){
             </View>
         </View>
     )
+}
+
+async function scheduleReminder() {
+    console.log('Schedule for', Platform.OS);
+
+    //Check for permission
+    const permissions = await Notifications.getPermissionsAsync();
+    if (!permissions.granted) {
+        const request = await Notifications.requestPermissionsAsync({
+            ios: {
+                allowAlert: true,
+                allowSound: true,
+                allowBadge: true
+            }
+        });
+
+        if(!request.granted){
+            return false;
+        }
+    }
+
+
+    //schedule a notification
+    const id = await Notifications.scheduleNotificationAsync({
+        content: {
+            title: 'Post Reminder',
+            body: 'Have you added tasks today?',
+        },
+        trigger: {
+            seconds: 5
+        }
+    });
+    console.log('id: ', id)
+
+
+    //pernission granted
+    return true;
+}
+
+function cancelReminder() {
+    console.log('Cancel for', Platform.OS);
 }
