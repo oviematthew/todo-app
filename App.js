@@ -7,7 +7,7 @@ import { load } from './src/database/config';
 import Form from './src/components/Form/Form';
 import Header from './src/components/Header/Header';
 import Tasks from './src/components/Tasks/Tasks';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import uuid from 'react-uuid';
 import { dbCollection } from './src/database/config';
 import { deleteDoc, doc, updateDoc} from 'firebase/firestore';
@@ -103,6 +103,15 @@ export default function App() {
     );
   }
 
+   // Add settings page
+   function Settings() {
+    return (
+      <View>
+        <StatusBar style="auto" />
+      </View>
+    );
+  }
+
   // Rendered screen
   return (
     <NavigationContainer>
@@ -121,10 +130,18 @@ export default function App() {
           component={Add}
           options={{
             tabBarIcon: ({ color }) => (
-              <View style={{ flexDirection: 'row' }}>
-                <FontAwesome5 name="bars" size={20} style={{ marginRight: 2 }} />
-                <FontAwesome5 name="plus" size={20} />
+              <View>
+                <MaterialIcons name="add-circle" size={24} />
               </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <FontAwesome name="gears" size={24} />
             ),
           }}
         />
