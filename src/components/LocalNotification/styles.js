@@ -30,22 +30,6 @@ options: {
         marginLeft: 10,
         fontSize: 17
     }
-},
-
-logs: {
-    container: {
-        marginTop: 30
-    },
-    title: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#777777'
-    },
-    text: {
-        fontSize: 12,
-        marginTop: 5,
-        color: '#777777'
-    }
 }
 });
 export default styles;

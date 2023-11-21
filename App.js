@@ -12,12 +12,9 @@ import { FontAwesome5, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import uuid from 'react-uuid';
 import { dbCollection } from './src/database/config';
 import { deleteDoc, doc, updateDoc} from 'firebase/firestore';
-import * as SplashScreen from 'expo-splash-screen'
 import * as Notifications from 'expo-notifications';
 
 
-//keep splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
 
 //handle notification display
 Notifications.setNotificationHandler({

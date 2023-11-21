@@ -36,16 +36,6 @@ export default function LocalNotification(){
                 </Pressable>
             </View>
 
-            {/* logs */}
-            <View style = {styles.logs.container}>
-                
-                    <Text style= {styles.logs.title}>
-                        Scheduled Notifications: 0
-                    </Text>
-                    <Text style= {styles.logs.text}>
-                        None
-                    </Text>
-            </View>
         </View>
     )
 }
@@ -53,6 +43,8 @@ export default function LocalNotification(){
 async function scheduleReminder() {
     console.log('Schedule for', Platform.OS);
 
+    try{
+        
     //Check for permission
     const permissions = await Notifications.getPermissionsAsync();
     if (!permissions.granted) {
@@ -80,11 +72,13 @@ async function scheduleReminder() {
             seconds: 5
         }
     });
-    console.log('id: ', id)
-
-
-    //pernission granted
+    console.log('Schedule Id: ', id)
+    
     return true;
+    }
+    catch {
+    return false;
+    }
 }
 
 function cancelReminder() {
