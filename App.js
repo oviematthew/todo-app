@@ -27,7 +27,7 @@ Notifications.setNotificationHandler({
     console.log('Handler success: ', notificationId)
   },
   handleError: (notificationId, error) => {
-    console.loh('Handler Error:', error)
+    console.log('Handler Error:', error)
   }
 })
 

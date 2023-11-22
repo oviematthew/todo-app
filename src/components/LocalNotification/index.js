@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 
 export default function LocalNotification(){
     const [reminder, setReminder] = useState(false);
+    const [schedule, setSchedule] = useState([])
 
     const handleReminderPress = () => {
         if(!reminder) {
@@ -16,6 +17,15 @@ export default function LocalNotification(){
             setReminder(false);
         }
     }
+
+    //load scheduled remminders.
+    useEffect(()=> {
+        (async () =>{
+            const previousSchedule = await getSchedule();
+            setSchedule(previousSchedule)
+        })
+    })
+
     return(
         <View style = {styles.container}>
             <Text style = {styles.title}>Notifications:</Text>
@@ -36,6 +46,7 @@ export default function LocalNotification(){
                 </Pressable>
             </View>
 
+            
         </View>
     )
 }
@@ -67,9 +78,12 @@ async function scheduleReminder() {
         content: {
             title: 'Post Reminder',
             body: 'Have you added tasks today?',
+            sound: true,
+            subtitle: "Do not forget",
         },
         trigger: {
-            seconds: 5
+            seconds: 5,
+            repeats: true,
         }
     });
     console.log('Schedule Id: ', id)
@@ -83,4 +97,26 @@ async function scheduleReminder() {
 
 function cancelReminder() {
     console.log('Cancel for', Platform.OS);
+
+    Notifications.getAllScheduledNotificationsAsync()
+    .then((notifications) => {
+    notifications.forEach((notification) => {
+    Notifications.cancelScheduledNotificationAsync(notification.identifier);
+    });
+    });
+}
+
+async function getSchedule(){
+    const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync;
+    
+    //create an array of schedule
+    const schedule = [];
+
+    scheduledNotifications.forEach((scheduledNotification) =>{
+        schedule.push({
+            id: scheduledNotification.identifier,
+            type: scheduledNotification.content.data.type
+        });
+    });
+    return schedule
 }

@@ -30,6 +30,8 @@ options: {
         marginLeft: 10,
         fontSize: 17
     }
-}
+},
+
+
 });
 export default styles;
